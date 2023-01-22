@@ -12,8 +12,12 @@ export class UsersService {
     private usersModel: Model<UserDocument>
 ) { }
 
-  createUser(createUserDto: CreateUserDto) {
-    return this.usersModel.create(createUserDto);
+ createUser(createUserDto: CreateUserDto) {
+  return new this.usersModel({
+       ...createUserDto,
+       createdAt: new Date(),
+      updatedAt: new Date(),
+    }).save();
   }
 
   findAll(){
@@ -21,7 +25,7 @@ export class UsersService {
   }
 
   async findOne(id: string): Promise<Users> {
-    return await this.usersModel.findOne({ where: { _id: id } });  
+    return await this.usersModel.findById(id).exec();  
    }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
